@@ -1,25 +1,33 @@
+# VIM KEY SHORTCUTS
+^A denotes Ctrl A.
+
 NORMAL MODE:
-	:q		Quit VIM
-	:w		Save changes
-	:wq		Save changes and exit
-	:q!		Exit without saving
+	:q			Quit VIM
+	:w			Save changes
+	:wq			Save changes and exit
+	:q!			Exit without saving
 
-	v		Select
-	y		Yank (copy) the current selection
-	d		Cut the current selection
-	DELETE		Delete the current selection
+	v			Select
+	y			Yank (copy) the current selection
+	d			Cut the current selection
+	DELETE			Delete the current selection
+	P			Paste the yanked text into the current cursor position
 
-	P		Paste the yanked text into the current cursor position
+	/<keyword> Enter	Search for <keyword>
+	n			Search next
+	N			Search previous
 
-	i		Enter INSERT MODE
-	:<n>		Go to line number <n>
-	set number	Display line numbers
-	set nonumber	Hide line numbers
+	:<n>			Go to line number <n>
+	set number		Display line numbers
+	set nonumber		Hide line numbers
 
-	:terminal	Open terminal in new tab
-	CtrlW && W	Switch between tabs
-	CtrlW && :q	Close current tab (fail if changes not saved/terminal still running)
-	CtrlW && :q!	Force close current tab
+	:terminal		Open terminal in new tab
+	^W W			Switch between tabs (or vim windows)
+	^W :q			Close current tab (fail if changes not saved/terminal still running)
+	^W :q!			Force close current tab
+
+	i			Enter INSERT MODE
+
 
 INSERT MODE:
-	ESC		Escape INSERT MODE (returning normal mode)
+	ESC			Escape INSERT MODE (returning to normal mode)
