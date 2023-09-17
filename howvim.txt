@@ -1,0 +1,25 @@
+NORMAL MODE:
+	:q		Quit VIM
+	:w		Save changes
+	:wq		Save changes and exit
+	:q!		Exit without saving
+
+	v		Select
+	y		Yank (copy) the current selection
+	d		Cut the current selection
+	DELETE		Delete the current selection
+
+	P		Paste the yanked text into the current cursor position
+
+	i		Enter INSERT MODE
+	:<n>		Go to line number <n>
+	set number	Display line numbers
+	set nonumber	Hide line numbers
+
+	:terminal	Open terminal in new tab
+	CtrlW && W	Switch between tabs
+	CtrlW && :q	Close current tab (fail if changes not saved/terminal still running)
+	CtrlW && :q!	Force close current tab
+
+INSERT MODE:
+	ESC		Escape INSERT MODE (returning normal mode)
