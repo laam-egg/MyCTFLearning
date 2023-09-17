@@ -1,0 +1,11 @@
+objdump -D -d -s -M intel asm.asm
+
+# About -d -s: https://stackoverflow.com/a/46559443/13680015
+# -M intel: Show Assembly in Intel's syntax (instead of AT&T's)
+# -D: Show .bss section
+
+# Hex values in data section (32 bit):
+#	First 4 hex bytes	Next 16 hex bytes	ASCII characters
+#	^---------------^	^---------------^	^--------------^
+#	     ADDRESS     	 CONTENT IN HEX  	CONTENT IN ASCII
+
