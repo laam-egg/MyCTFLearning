@@ -26,6 +26,9 @@ NORMAL MODE:
 	^W :q			Close current tab (fail if changes not saved/terminal still running)
 	^W :q!			Force close current tab
 
+	split <filename>	Open file in horizontal split
+	vsplit <filename>	Open file in vertical split
+
 	i			Enter INSERT MODE
 
 
