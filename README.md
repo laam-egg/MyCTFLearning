@@ -41,9 +41,9 @@ Some system call codes:
 
 | `rax` | System call |   `rdi`   |     `rsi`     |   `rdx`  | `r10` |  `r8` | `r9` |
 | ----: | :---------- | :-------: | :-----------: | :------: | :---: | :---: | :--: |
-|   `0` | `sys_read`  |  `int fd` |    `char*`    | `size_t` |  `-`  |  `-`  |  `-` |
-|   `1` | `sys_write` |  `int fd` | `char const*` | `size_t` |  `-`  |  `-`  |  `-` |
-|  `60` | `sys_exit`  |   `int`   |      `-`      |    `-`   |  `-`  |  `-`  |  `-` |
+|   `0` | `sys_read`  |  `int fd` |    `char*`    | `size_t` |   -   |   -   |   -  |
+|   `1` | `sys_write` |  `int fd` | `char const*` | `size_t` |   -   |   -   |   -  |
+|  `60` | `sys_exit`  |   `int`   |       -       |     -    |   -   |   -   |   -  |
 
 
 # Summary: Linux Kernel Calling Convention (x86 32-bit)
@@ -58,9 +58,9 @@ Some system call codes:
 
 | `eax` | System call |   `ebx`   |     `ecx`     |   `edx`  | `esi` | `edi` |
 | ----: | :---------- | :-------: | :-----------: | :------: | :---: | :---: |
-|   `1` | `sys_exit`  |   `int`   |      `-`      |    `-`   |  `-`  |  `-`  |
-|   `3` | `sys_read`  |  `int fd` |    `char*`    | `size_t` |  `-`  |  `-`  |
-|   `4` | `sys_write` |  `int fd` | `char const*` | `size_t` |  `-`  |  `-`  |
+|   `1` | `sys_exit`  |   `int`   |       -       |     -    |   -   |   -   |
+|   `3` | `sys_read`  |  `int fd` |    `char*`    | `size_t` |   -   |   -   |
+|   `4` | `sys_write` |  `int fd` | `char const*` | `size_t` |   -   |   -   |
 
 
 # Summary: File Descriptor (fd) codes
