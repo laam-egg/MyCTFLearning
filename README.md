@@ -1,12 +1,13 @@
 # Useful Links
 
 1. x86 Registers - Meaning and History - <https://keleshev.com/eax-x86-register-meaning-and-history/>
-2. x86 64-bit C Calling Convention - <https://aaronbloomfield.github.io/pdr/book/x86-64bit-ccc-chapter.pdf>
-3. Intro to x86 Assembly - <https://www.youtube.com/playlist?list=PLmxT2pVYo5LB5EzTPZGfFN0c2GDiSXgQe>
-4. Nightmare - An Intro to Binary Exploitation - <https://guyinatuxedo.github.io/index.html>
-5. Linux x86 32-bit System Call Table - <https://syscalls32.paolostivanin.com/> (Note that **return value is in EAX**)
-6. Linux x86 64-bit System Call Table - <https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/> (Note that **return value is in RAX**)
-7. x64 Assembly Cheat Sheet - <https://cs.brown.edu/courses/cs033/docs/guides/x64_cheatsheet.pdf>
+2. x86 32-bit C Calling Convention - <https://aaronbloomfield.github.io/pdr/book/x86-32bit-ccc-chapter.pdf>
+3. x86 64-bit C Calling Convention - <https://aaronbloomfield.github.io/pdr/book/x86-64bit-ccc-chapter.pdf>
+4. Intro to x86 Assembly - <https://www.youtube.com/playlist?list=PLmxT2pVYo5LB5EzTPZGfFN0c2GDiSXgQe>
+5. Nightmare - An Intro to Binary Exploitation - <https://guyinatuxedo.github.io/index.html>
+6. Linux x86 32-bit System Call Table - <https://syscalls32.paolostivanin.com/> (Note that **return value is in EAX**)
+7. Linux x86 64-bit System Call Table - <https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/> (Note that **return value is in RAX**)
+8. x64 Assembly Cheat Sheet - <https://cs.brown.edu/courses/cs033/docs/guides/x64_cheatsheet.pdf>
 
 
 # Summary: NASM and ld
@@ -33,7 +34,7 @@
 
 Residence of values:
 
-|   System Call Code  |                         Parameters                          |
+|   System Call Code  |                          Arguments                          |
 | :-----------------: | :---------------------------------------------------------: |
 |        `rax`        |              `rdi, rsi, rdx, r10, r8, r9`                   |
 
@@ -50,7 +51,7 @@ Some system call codes:
 
 Residence of values:
 
-|   System Call Code  |                         Parameters                   |
+|   System Call Code  |                         Arguments                    |
 | :-----------------: | :--------------------------------------------------: |
 |        `eax`        |               `ebx, ecx, edx, esi, edi`              |
 
@@ -86,7 +87,7 @@ original residential registers.
 
 Caller-saved registers in x86 64-bit are:
 
-	r10 ; r11 ; registers containing function parameters (below)
+	r10 ; r11 ; registers containing function arguments (below)
 
 In contrast to volatile registers, non-volatile registers (aka callee-saved
 registers) mean to store long-lived values that must be preserved across
@@ -110,13 +111,22 @@ Callee-saved registers in x86 64-bit are:
 	rbx ; rbp ; r12-r15
 
 
-## Residence of Parameters and Return Value:
+## Residence of Arguments and Return Value:
 
-|               Parameters                 |    Return value    |
+|                Arguments                 |    Return value    |
 | :--------------------------------------: | :----------------: |
 |   `rdi, rsi, rdx, rcx, r8, r9`, stack    |       `rax`        |
 
-More parameters are pushed onto the stack in REVERSE order (push last parameter first).
+More arguments are pushed onto the stack in REVERSE order (push last argument
+first). When the call finishes, the caller must deallocate arguments on the
+stack, if any. For example, if the stack contains 2 `int` arguments, which
+occupy 8 bytes in total, the code should be:
+
+	```asm
+	; ...
+	call some_function
+	add esp, 8
+	```
 
 
 ## Callee's Local Variables
@@ -133,8 +143,72 @@ downwards:
 
  - Remember to deallocate local variables on the stack, if any, before issuing
 a `ret` instruction. The easiest way to do this is to set RSP to the original
-value before allocating local variables. For instance, in correspondence with the previous example:
+value before allocating local variables. For instance, in correspondence with
+the previous example:
 	```asm
 	add rsp, 12
+	```
+
+ - Another way to allocate/deallocate variables is mentioned in the *C Calling
+Convention on 32-bit x86* section below.
+
+# Summary: C Calling Convention (x86 32-bit) 
+ 
+## Volatile and non-volatile registers 
+ 
+Caller-saved (volatile) registers are: 
+ 
+        eax     ecx     edx 
+ 
+Callee-saved (non-volatile) registers are: 
+ 
+        ebx     edi     esi     ebp     esp 
+ 
+In case of `ebp` - the Base Stack Pointer register and `esp` - the (Top) Stack
+Pointer Register, the callee must save them at the very start of the function 
+body to preserve its caller's original stack frame: 
+ 
+```asm 
+push ebp
+mov ebp, esp
+```
+ 
+Only after that will the callee be eligible to allocate its local variables 
+on the stack (see below). 
+ 
+## Residence of Arguments and Return Value
+
+ - Arguments are pushed onto the stack in REVERSE order (push last argument
+first). The caller must deallocate arguments on the stack, if any (as told
+in *64-bit*).
+ - Set return value in `eax`.
+
+## Callee's Local Variables
+
+Apart from the way to allocate/deallocate local variables as mentioned in the
+*C Calling Convention on 64-bit x86* section above, the following is the
+standard (?) way on *32-bit x86*:
+
+ - First and foremost, the callee must preserve its caller's stack frame, then
+initialize a new, separate stack frame:
+
+	```asm
+	push ebp
+	mov ebp, esp	; (1)
+	```
+
+ - Then, the callee is free to allocate local variables:
+
+	```asm
+	sub esp, 12
+	```
+
+ - At the end of function body, the callee must restore its caller's original stack
+frame. `add esp, 12` is now not necessary, the code should be:
+
+	```asm
+	mov esp, ebp	; ebp should not have been altered since (1)
+	pop ebp
+	ret
 	```
 
