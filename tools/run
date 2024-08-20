@@ -1,0 +1,16 @@
+#!/bin/bash
+
+cd "$(dirname "$0")"
+
+if ! [ -f "./venv/bin/activate" ]; then
+    echo "Please run the following commands in the same directory as this file"
+    echo
+    echo "    virtualenv venv -p \$(which python3.12)"
+    echo "    pip install -r requirements.txt"
+    echo
+    echo "to install dependencies, before running this tool."
+    exit 1
+fi
+
+source ./venv/bin/activate
+python main.py
