@@ -7,6 +7,7 @@ TODO: Add colors.
 import cmd
 import traceback
 import typing
+import pyperclip # type: ignore
 from utils.hextools import h2d, d2h, h2s_b, h2s_l, s2h
 
 class UserError(RuntimeError):
@@ -90,16 +91,16 @@ class CommandProcessor(cmd.Cmd):
         finally:
             print()
     
-    def do_help(self, arg: str) -> bool | None:
-        if len(arg.strip()) != 0:
-            return super().do_help(arg)
+    # def do_help(self, arg: str) -> bool | None:
+    #     if len(arg.strip()) != 0:
+    #         return super().do_help(arg)
         
-        print("Documented commands (type help <command name> for more info)")
-        print("============================================================")
-        print("EOF, exit, q, quit       Exits the tool.")
-        print("h, hex                   Inspects a hex value.")
-        print("d, dec                   Inspects a decimal value.")
-        print("s, str                   Inspects a string value.")
+    #     print("Documented commands (type help <command name> for more info)")
+    #     print("============================================================")
+    #     print("EOF, exit, q, quit       Exits the tool.")
+    #     print("h, hex                   Inspects a hex value.")
+    #     print("d, dec                   Inspects a decimal value.")
+    #     print("s, str                   Inspects a string value.")
 
     def do_exit(self, _):
         """Exits the program. Same as commands 'EOF', 'q' and 'quit'."""
@@ -246,6 +247,50 @@ class CommandProcessor(cmd.Cmd):
     def do_s(self, s: str):
         """Shorthand for command 'str'."""
         return self.do_str(s)
+    
+    def do_aslr(self, s: str):
+        """Displays Linux command to disable/enable ASLR (Address Space Layout Randomization),
+        and if possible, copy this command to clipboard.
+
+        Usage:
+        
+            > aslr
+            echo 0 | sudo tee /proc/sys/kernel/randomize_va_space
+
+            This command has been copied to clipboard for you.
+
+            > aslr 0
+            echo 0 | sudo tee /proc/sys/kernel/randomize_va_space
+
+            This command has been copied to clipboard for you.
+
+            > aslr 1
+            echo 1 | sudo tee /proc/sys/kernel/randomize_va_space
+
+            > aslr 2
+            echo 2 | sudo tee /proc/sys/kernel/randomize_va_space
+        
+        Note that we don't use sysctl to accomplish these tasks, like:
+            $ sudo sysctl kernel.randomize_va_space=0
+        since by doing this, the setting is permanent, which might put your system at risk - whereas
+        the commands provided by us configure the setting temporarily ; it'll be reset to default after
+        a reboot.
+
+        More info: https://askubuntu.com/questions/318315/how-can-i-temporarily-disable-aslr-address-space-layout-randomization
+        """
+
+        if s == "":
+            s = "0"
+        if s not in ["0", "1", "2"]:
+            raise UserError(f"Argument not supported: {s}. Type \"help aslr\".")
+        cmd = f"echo {s} | sudo tee /proc/sys/kernel/randomize_va_space"
+        print(cmd)
+        pyperclip.copy(cmd) # type: ignore
+        print("")
+        print("This command has been copied to clipboard for you.")
+        print("If you cannot paste, please copy it manually, or refer to")
+        print("some potential clipboard issues here:")
+        print("https://pypi.org/project/pyperclip/")
 
 if __name__ == '__main__':
 
