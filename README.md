@@ -1,5 +1,20 @@
 # MyCTFLearning
 
+- [MyCTFLearning](#myctflearning)
+  - [Useful Links](#useful-links)
+  - [NASM and ld](#nasm-and-ld)
+  - [Linux Kernel Calling Convention (x86 64-bit)](#linux-kernel-calling-convention-x86-64-bit)
+  - [Linux Kernel Calling Convention (x86 32-bit)](#linux-kernel-calling-convention-x86-32-bit)
+  - [File Descriptor (fd) codes](#file-descriptor-fd-codes)
+  - [C Calling Convention (x86 64-bit)](#c-calling-convention-x86-64-bit)
+    - [(64) About volatile and non-volatile registers](#64-about-volatile-and-non-volatile-registers)
+    - [(64) Residence of Arguments and Return Value](#64-residence-of-arguments-and-return-value)
+    - [(64) Callee's Local Variables](#64-callees-local-variables)
+  - [C Calling Convention (x86 32-bit)](#c-calling-convention-x86-32-bit)
+    - [(32) Volatile and non-volatile registers](#32-volatile-and-non-volatile-registers)
+    - [(32) Residence of Arguments and Return Value](#32-residence-of-arguments-and-return-value)
+    - [(32) Callee's Local Variables](#32-callees-local-variables)
+
 ## Useful Links
 
 1. x86 Registers - Meaning and History - <https://keleshev.com/eax-x86-register-meaning-and-history/>
